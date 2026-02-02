@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
@@ -51,9 +52,21 @@ public class CharacterScript : MonoBehaviour
             }
             lastDirectionLeft = false;
         }
-        else
+        if (lastDirectionLeft && !Keyboard.current.aKey.isPressed || myRigidBody.linearVelocityX < -5)
         {
-            myRigidBody.linearVelocityX = 0;
+            myRigidBody.linearVelocityX += (float)0.5;
+            if(myRigidBody.linearVelocityX > 0)
+            {
+                myRigidBody.linearVelocityX = 0;
+            }
+        }
+        else if (!lastDirectionLeft && !Keyboard.current.dKey.isPressed || myRigidBody.linearVelocityX > 5)
+        {
+            myRigidBody.linearVelocityX -= (float)0.5;
+            if (myRigidBody.linearVelocityX < 0)
+            {
+                myRigidBody.linearVelocityX = 0;
+            }
         }
         if (Keyboard.current.shiftKey.wasPressedThisFrame)
         {

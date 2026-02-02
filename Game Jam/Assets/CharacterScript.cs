@@ -13,6 +13,8 @@ public class CharacterScript : MonoBehaviour
 
     private bool lastDirectionLeft = true;
     public bool hasDash = true;
+    public float dashCooldown = (float)1.25;
+    public float dashTimer = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -72,6 +74,10 @@ public class CharacterScript : MonoBehaviour
         {
             Dash();
         }
+        if(dashTimer < dashCooldown)
+        {
+            dashTimer += Time.deltaTime;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -101,13 +107,17 @@ public class CharacterScript : MonoBehaviour
 
     private void Dash()
     {
-        if(lastDirectionLeft)
+        if(dashTimer >= dashCooldown)
         {
-            myRigidBody.linearVelocityX -= 20;
-        }
-        else
-        {
-            myRigidBody.linearVelocityX += 20;
+            if (lastDirectionLeft)
+            {
+                myRigidBody.linearVelocityX -= 20;
+            }
+            else
+            {
+                myRigidBody.linearVelocityX += 20;
+            }
+            dashTimer = 0;
         }
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 public class CharacterScript : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class CharacterScript : MonoBehaviour
     public float jumpPower = 5;
     public int jumpCount = 2;
     public bool isAlive = true;
-    public Collider2D collisionCollider;
+    public GameObject floorDeathBox;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,33 +21,45 @@ public class CharacterScript : MonoBehaviour
     {
         if (isAlive == false)
         {
-            return;
+            transform.position = new Vector3(0,10,1);
+            isAlive = true;
         }
+
         if (Keyboard.current.spaceKey.wasPressedThisFrame && jumpCount >= 1)
         {
             myRigidBody.linearVelocity = Vector2.up * jumpPower;
             jumpCount -= 1;
         }
+
         if (Keyboard.current.aKey.isPressed)
         {
             myRigidBody.linearVelocityX = -5;
         }
-        if (Keyboard.current.dKey.isPressed)
+        else if (Keyboard.current.dKey.isPressed)
         {
             myRigidBody.linearVelocityX = 5;
         }
-    }
-
-    public bool DeathCauses()
-    {
-        if(gameObject.)
-
-        return isAlive;
+        else
+        {
+            myRigidBody.linearVelocityX = 0;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        jumpCount = 2;
+        foreach (ContactPoint2D contact in collision.contacts)
+        {
+            if (contact.normal.y > 0.5f)
+            {
+                jumpCount = 2;
+                break;
+            }
+        }
+
+        if (collision.gameObject.CompareTag("DeathArea"))
+        {
+            isAlive = false;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)

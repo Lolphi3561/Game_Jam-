@@ -10,6 +10,9 @@ public class CharacterScript : MonoBehaviour
     public bool isAlive = true;
     public GameObject floorDeathBox;
 
+    private bool lastDirectionLeft = true;
+    public bool hasDash = true;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,15 +36,28 @@ public class CharacterScript : MonoBehaviour
 
         if (Keyboard.current.aKey.isPressed)
         {
-            myRigidBody.linearVelocityX = -5;
+            if (myRigidBody.linearVelocityX > -5)
+            {
+                myRigidBody.linearVelocityX = -5;
+            }
+            lastDirectionLeft = true;
+
         }
         else if (Keyboard.current.dKey.isPressed)
         {
-            myRigidBody.linearVelocityX = 5;
+            if(myRigidBody.linearVelocityX < 5)
+            {
+                myRigidBody.linearVelocityX = 5;
+            }
+            lastDirectionLeft = false;
         }
         else
         {
             myRigidBody.linearVelocityX = 0;
+        }
+        if (Keyboard.current.shiftKey.wasPressedThisFrame)
+        {
+            Dash();
         }
     }
 
@@ -67,6 +83,18 @@ public class CharacterScript : MonoBehaviour
         if(Keyboard.current.spaceKey.isPressed == false)
         {
             jumpCount -= 1;
+        }
+    }
+
+    private void Dash()
+    {
+        if(lastDirectionLeft)
+        {
+            myRigidBody.linearVelocityX -= 20;
+        }
+        else
+        {
+            myRigidBody.linearVelocityX += 20;
         }
     }
 }

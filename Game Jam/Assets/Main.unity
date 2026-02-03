@@ -229,7 +229,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 8
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -257,8 +257,8 @@ MonoBehaviour:
   isAlive: 1
   floorDeathBox: {fileID: 1567462173}
   respawnPoint: {fileID: 579074393}
-  speed: 7.3
-  jumpPower: 5
+  speed: 10
+  jumpPower: 30
   wallCheck: {fileID: 1307943306}
   wallLayer:
     serializedVersion: 2
@@ -266,7 +266,7 @@ MonoBehaviour:
   hasDash: 1
   dashCooldown: 0.75
   dashTimer: 0
-  dashBoost: 20
+  dashBoost: 40
 --- !u!61 &398688855
 BoxCollider2D:
   m_ObjectHideFlags: 0

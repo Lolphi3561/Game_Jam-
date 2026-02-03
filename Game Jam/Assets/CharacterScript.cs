@@ -13,31 +13,31 @@ public class CharacterScript : MonoBehaviour
     public GameObject floorDeathBox;
     public GameObject respawnPoint;
     public Collision2D collision;
-    public float speed = 7.3f;
+    public float speed = 10f;
     private int lastDirection = 0;
 
     // Springen
     private int jumpsLeft = 0;
     private bool isGrounded = false;
-    public float jumpPower = 20;
+    public float jumpPower = 30;
 
     // WallCling
     private bool isWallSliding;
-    private float wallSlidingSpeed = 2f;
+    private float wallSlidingSpeed = 1f;
     public Transform wallCheck;
     public LayerMask wallLayer;
 
     private float wallJumpingDirection;
     private float wallJumpingTime = 0.2f;
     private float wallJumpingCounter;
-    private Vector2 wallJumpingPower = new Vector2(10f, 6f);
+    private Vector2 wallJumpingPower = new Vector2(15f, 20f);
 
 
     // Dash
     public bool hasDash = true;
     public float dashCooldown = 0.75f;
     public float dashTimer = 0;
-    public float dashBoost = 20;
+    public float dashBoost = 40;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

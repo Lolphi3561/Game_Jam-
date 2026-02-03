@@ -13,22 +13,25 @@ public class CharacterScript : MonoBehaviour
     public GameObject floorDeathBox;
     public GameObject respawnPoint;
     public Collision2D collision;
-    private bool lastDirectionLeft = true;
+    public float speed = 7.3f;
+    private int lastDirection = 0;
 
     // Springen
     private int jumpsLeft = 0;
     private bool isGrounded = false;
-    public float jumpPower = 10;
+    public float jumpPower = 20;
 
     // WallCling
-    public PhysicsMaterial2D NoFriction;
-    public PhysicsMaterial2D WallFriction;
-    private Collider2D col;
-    public bool isOnWall = false;
-    public float wallJumpForceX = 8f;
-    public float wallJumpForceY = 10f;
-    private int wallDir = 0;
+    private bool isWallSliding;
+    private float wallSlidingSpeed = 2f;
+    public Transform wallCheck;
+    public LayerMask wallLayer;
 
+    private float wallJumpingDirection;
+    private float wallJumpingTime = 0.2f;
+    private float wallJumpingCounter;
+    private float wallJumpingDuration = 0.4f;
+    private Vector2 wallJumpingPower = new Vector2(10f, 6f);
 
 
     // Dash
@@ -40,14 +43,16 @@ public class CharacterScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        col = GetComponent<Collider2D>();
-        col.sharedMaterial = NoFriction;
+        myRigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     // Update is called once per frame
     void Update()
     {
         Movement();
+
+        WallSlide();
+        WallJump();
 
         Dash();
     }
@@ -63,44 +68,33 @@ public class CharacterScript : MonoBehaviour
             isAlive = true;
         }
 
+
         if (Keyboard.current.spaceKey.wasPressedThisFrame && jumpsLeft > 0)
         {
-            if (isOnWall)
-            {
-                myRigidBody.linearVelocity = new Vector2(
-                    wallJumpForceX * wallDir,
-                    wallJumpForceY
-                );
-
-                isOnWall = false;
-                col.sharedMaterial = NoFriction;
-            }
-            else
-            {
-                myRigidBody.linearVelocityY = jumpPower;
-            }
+            myRigidBody.linearVelocityY = jumpPower;
             jumpsLeft--;
         }
 
         if (Keyboard.current.aKey.isPressed)
         {
-            if (myRigidBody.linearVelocityX > -5)
+            if (myRigidBody.linearVelocityX > -speed)
             {
-                myRigidBody.linearVelocityX = -5;
+                myRigidBody.linearVelocityX = -speed;
             }
-            lastDirectionLeft = true;
-
+            lastDirection = -1;
+            transform.localScale = new Vector3(-1, 1, 1);
         }
         else if (Keyboard.current.dKey.isPressed)
         {
-            if (myRigidBody.linearVelocityX < 5)
+            if (myRigidBody.linearVelocityX < speed)
             {
-                myRigidBody.linearVelocityX = 5;
+                myRigidBody.linearVelocityX = speed;
             }
-            lastDirectionLeft = false;
+            lastDirection = 1;
+            transform.localScale = new Vector3(1, 1, 1);
         }
 
-        if (lastDirectionLeft && !Keyboard.current.aKey.isPressed || myRigidBody.linearVelocityX < -5)
+        if (lastDirection == -1 && !Keyboard.current.aKey.isPressed || myRigidBody.linearVelocityX < -5)
         {
             myRigidBody.linearVelocityX += (float)0.5;
             if (myRigidBody.linearVelocityX > 0)
@@ -108,7 +102,7 @@ public class CharacterScript : MonoBehaviour
                 myRigidBody.linearVelocityX = 0;
             }
         }
-        else if (!lastDirectionLeft && !Keyboard.current.dKey.isPressed || myRigidBody.linearVelocityX > 5)
+        else if (lastDirection == 1 && !Keyboard.current.dKey.isPressed || myRigidBody.linearVelocityX > 5)
         {
             myRigidBody.linearVelocityX -= (float)0.5;
             if (myRigidBody.linearVelocityX < 0)
@@ -126,30 +120,15 @@ public class CharacterScript : MonoBehaviour
         {
             isAlive = false;
         }
-
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            myRigidBody.linearVelocity = new Vector2(0, 0);
-        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(isOnWall && Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            myRigidBody.linearVelocityX = 20;
-        }
-        WallCling(collision);
+        CheckGround(collision);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (isOnWall)
-        {
-            isOnWall = false;
-            col.sharedMaterial = NoFriction;
-        }
-
         if (isGrounded)
         {
             isGrounded = false;
@@ -170,6 +149,50 @@ public class CharacterScript : MonoBehaviour
         }
     }
 
+    private bool CheckWall()
+    {
+        return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer);
+    }
+
+    private void WallSlide()
+    {
+        if(CheckWall() && !isGrounded)
+        {
+            isWallSliding = true;
+            myRigidBody.linearVelocity = new Vector2(myRigidBody.linearVelocity.x, Mathf.Clamp(myRigidBody.linearVelocity.y, -wallSlidingSpeed, float.MaxValue));
+        }
+        else
+        {
+            isWallSliding = false;
+        }
+    }
+
+    private void WallJump()
+    {
+        if (isWallSliding)
+        {
+            wallJumpingDirection = -transform.localScale.x;
+            wallJumpingCounter = wallJumpingTime;
+        }
+        else
+        {
+            wallJumpingCounter -= Time.deltaTime;
+        }
+
+        if(Keyboard.current.spaceKey.wasPressedThisFrame && wallJumpingCounter > 0f)
+        {
+            myRigidBody.linearVelocity = new Vector2(wallJumpingDirection * wallJumpingPower.x, wallJumpingPower.y);
+            wallJumpingCounter = 0f;
+
+            if(transform.localScale.x != wallJumpingDirection)
+            {
+                lastDirection = -lastDirection;
+                Vector3 localScale = transform.localScale;
+                localScale.x *= -1f;
+                transform.localScale = localScale;
+            }
+        }
+    }
 
     private void Dash()
     {
@@ -180,37 +203,8 @@ public class CharacterScript : MonoBehaviour
 
         if (dashTimer >= dashCooldown && Keyboard.current.shiftKey.wasPressedThisFrame)
         {
-            if (lastDirectionLeft)
-            {
-                myRigidBody.linearVelocityX -= dashBoost;
-            }
-            else
-            {
-                myRigidBody.linearVelocityX += dashBoost;
-            }
+            myRigidBody.linearVelocityX = dashBoost * lastDirection;
             dashTimer = 0;
-        }
-    }
-
-    private void WallCling(Collision2D collision)
-    {
-        foreach (ContactPoint2D contact in collision.contacts)
-        {
-            if (Mathf.Abs(contact.normal.x) > 0.5f && contact.normal.y < 0.2f)
-            {
-                isOnWall = true;
-                col.sharedMaterial = WallFriction;
-                jumpsLeft = 1;
-
-                if(contact.normal.x > 0)
-                {
-                    wallDir = 1;
-                }
-                else
-                {
-                    wallDir = -1;
-                }
-            }
         }
     }
 }

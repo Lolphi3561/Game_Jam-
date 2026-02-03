@@ -30,7 +30,6 @@ public class CharacterScript : MonoBehaviour
     private float wallJumpingDirection;
     private float wallJumpingTime = 0.2f;
     private float wallJumpingCounter;
-    private float wallJumpingDuration = 0.4f;
     private Vector2 wallJumpingPower = new Vector2(10f, 6f);
 
 
@@ -62,7 +61,6 @@ public class CharacterScript : MonoBehaviour
         // Totesfall
         if (isAlive == false)
         {
-            
             transform.position = respawnPoint.transform.position;
             transform.rotation = respawnPoint.transform.rotation;
             isAlive = true;

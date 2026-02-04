@@ -16,6 +16,11 @@ public class deadlyArrowScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+    }
+
+    void FixedUpdate()
+    {
         Vector2 targetPos = new Vector2(transform.position.x, platformRb.position.y);
         platformRb.MovePosition(targetPos);
     }

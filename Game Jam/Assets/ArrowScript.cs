@@ -10,15 +10,10 @@ public class ArrowScript : MonoBehaviour
     {
         crossbow = GameObject.FindGameObjectWithTag("Crossbow").transform;
     }
-
+    
     // Update is called once per frame
     void Update()
     {
         transform.position += crossbow.right * arrowSpeed * Time.deltaTime;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Destroy(gameObject);
     }
 }

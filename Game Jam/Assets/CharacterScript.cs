@@ -114,7 +114,7 @@ public class CharacterScript : MonoBehaviour
     {
         CheckGround(collision);
 
-        if (collision.gameObject.CompareTag("DeathArea"))
+        if (collision.gameObject.CompareTag("DeathArea") || collision.gameObject.CompareTag("DeadlyProjectile"))
         {
             isAlive = false;
         }

@@ -4,9 +4,6 @@ using UnityEngine;
 public class deadlyArrowScript : MonoBehaviour
 {
 
-    public Transform platform = null;
-    public Rigidbody2D platformRb;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,8 +18,7 @@ public class deadlyArrowScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector2 targetPos = new Vector2(transform.position.x, platformRb.position.y);
-        platformRb.MovePosition(targetPos);
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -30,6 +26,10 @@ public class deadlyArrowScript : MonoBehaviour
         if (collision.transform.root != transform.root)
         {
             Destroy(transform.root.gameObject);
+        }
+        else
+        {
+            Debug.Log("aaaa");
         }
     }
 }

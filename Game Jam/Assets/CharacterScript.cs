@@ -37,7 +37,7 @@ public class CharacterScript : MonoBehaviour
     public bool hasDash = true;
     public float dashCooldown = 0.75f;
     public float dashTimer = 0;
-    public float dashBoost = 40;
+    public float dashBoost = 30;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -94,7 +94,7 @@ public class CharacterScript : MonoBehaviour
 
         if (lastDirection == -1 && !Keyboard.current.aKey.isPressed || myRigidBody.linearVelocityX < -5)
         {
-            myRigidBody.linearVelocityX += (float)0.5;
+            myRigidBody.linearVelocityX += (float)75*Time.deltaTime;
             if (myRigidBody.linearVelocityX > 0)
             {
                 myRigidBody.linearVelocityX = 0;
@@ -102,7 +102,7 @@ public class CharacterScript : MonoBehaviour
         }
         else if (lastDirection == 1 && !Keyboard.current.dKey.isPressed || myRigidBody.linearVelocityX > 5)
         {
-            myRigidBody.linearVelocityX -= (float)0.5;
+            myRigidBody.linearVelocityX -= (float)75*Time.deltaTime;
             if (myRigidBody.linearVelocityX < 0)
             {
                 myRigidBody.linearVelocityX = 0;

@@ -8,6 +8,9 @@ TagManager:
   - Wall
   - Crossbow
   - DeadlyProjectile
+  - ArrowGroup
+  - NewLevelPlatform
+  - NextLevelPlatform
   layers:
   - Default
   - TransparentFX

@@ -9,12 +9,11 @@ public class CharacterScript : MonoBehaviour
 {
     // Allgemien
     public Rigidbody2D myRigidBody;
-    public bool isAlive = true;
-    public GameObject floorDeathBox;
     public GameObject respawnPoint;
     public Collision2D collision;
     public float speed = 10f;
     private int lastDirection = 0;
+    public Camera camera;
 
     // Springen
     private int jumpsLeft = 0;
@@ -35,9 +34,17 @@ public class CharacterScript : MonoBehaviour
 
     // Dash
     public bool hasDash = true;
-    public float dashCooldown = 0.75f;
+    public float dashCooldown = 1.25f;
     public float dashTimer = 0;
     public float dashBoost = 30;
+
+    // (Enter) Level
+    private bool isWaiting = false;
+    private int level = 1;
+    private int levelChecker = 2;
+    public Transform deathFloor;
+    public Transform cealing;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -48,7 +55,10 @@ public class CharacterScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Movement();
+        if (!isWaiting)
+        {
+            Movement();
+        }
 
         WallSlide();
         WallJump();
@@ -58,15 +68,6 @@ public class CharacterScript : MonoBehaviour
 
     private void Movement()
     {
-        // Totesfall
-        if (isAlive == false)
-        {
-            transform.position = respawnPoint.transform.position;
-            transform.rotation = respawnPoint.transform.rotation;
-            isAlive = true;
-        }
-
-
         if (Keyboard.current.spaceKey.wasPressedThisFrame && jumpsLeft > 0)
         {
             myRigidBody.linearVelocityY = jumpPower;
@@ -116,8 +117,22 @@ public class CharacterScript : MonoBehaviour
 
         if (collision.gameObject.CompareTag("DeathArea") || collision.gameObject.CompareTag("DeadlyProjectile"))
         {
-            isAlive = false;
+            transform.position = respawnPoint.transform.position;
             transform.SetParent(null);
+        }
+        if (collision.gameObject.CompareTag("NextLevelPlatform"))
+        {
+            isWaiting = true;
+            level++;
+            myRigidBody.linearVelocityX = 0;
+            collision.collider.enabled = false;
+            camera.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y - 10, camera.transform.position.z);
+            deathFloor.transform.position = new Vector3(deathFloor.transform.position.x, deathFloor.transform.position.y - 10, deathFloor.transform.position.z);
+        }
+        if (collision.gameObject.CompareTag("NewLevelPlatform"))
+        {
+            isWaiting = false;
+            LevelCheck();
         }
     }
 
@@ -205,6 +220,16 @@ public class CharacterScript : MonoBehaviour
         {
             myRigidBody.linearVelocityX = dashBoost * lastDirection;
             dashTimer = 0;
+        }
+    }
+
+    private void LevelCheck()
+    {
+        if(level == levelChecker)
+        {
+            cealing.transform.position = new Vector3(cealing.transform.position.x, cealing.transform.position.y - 10, cealing.transform.position.z);
+            respawnPoint.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+            levelChecker++;
         }
     }
 }

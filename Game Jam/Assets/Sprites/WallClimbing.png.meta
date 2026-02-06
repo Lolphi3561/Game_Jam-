@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 8155f16791c6eb74badaa789246f8485
+guid: 0cd7dcfebbd1a314ea6771a690c159de
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4375037250293027418
-    second: Danjels Satan_0
+      213: 3600166516964941729
+    second: WallClimbing_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Danjels Satan_0
+      name: WallClimbing_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1152
-        height: 648
+        width: 192
+        height: 1088
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a5251def23147bc30800000000000000
-      internalID: 4375037250293027418
+      spriteID: 1af53f76f5c56f130800000000000000
+      internalID: 3600166516964941729
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Danjels Satan_0: 4375037250293027418
+      WallClimbing_0: 3600166516964941729
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

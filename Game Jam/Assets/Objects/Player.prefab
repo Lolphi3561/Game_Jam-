@@ -213,7 +213,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   myRigidBody: {fileID: 4899417954528320203}
-  respawnPoint: {fileID: 0}
+  respawnPoint: {fileID: 79404628772770898, guid: 3f80c6924f0afa245811917afc3f37d2, type: 3}
+  deathTrigger: {fileID: 0}
   speed: 10
   jumpPower: 20
   wallCheck: {fileID: 3058573216889287592}
@@ -224,6 +225,9 @@ MonoBehaviour:
   dashCooldown: 0.75
   dashTimer: 0
   dashBoost: 30
+  jumpSprite: {fileID: 7622853994396731246, guid: a04dd5bb36af34b489fdd555acb0fab3, type: 3}
+  wallclingLeftSprite: {fileID: 7547114215695373847, guid: 663aeab87750bed498ad60902f5a310e, type: 3}
+  wallclingRightSprite: {fileID: 2000787456044972092, guid: afa3d41228f39ee49a41ba014883042d, type: 3}
 --- !u!95 &3693270155452891107
 Animator:
   serializedVersion: 7

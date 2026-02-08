@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1043642666210807772}
   - component: {fileID: 4646931351787691234}
   - component: {fileID: 8565322355990496101}
+  - component: {fileID: 8015134925516230915}
   m_Layer: 0
   m_Name: Crossbow
   m_TagString: Crossbow
@@ -106,3 +107,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   Arrow: {fileID: 2923419576684983998, guid: e1d74c4935420374f917931049f47e65, type: 3}
   spawnRate: 4
+--- !u!95 &8015134925516230915
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684498057458701850}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d9618042748b8fe43999ad3a8ac80d56, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

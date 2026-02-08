@@ -43,11 +43,26 @@ public class CharacterScript : MonoBehaviour
     private int level = 1;
     private bool canMove = true;
 
+    // Sprites
+    public Sprite jumpSprite;
+    public Sprite wallclingLeftSprite;
+    public Sprite wallclingRightSprite;
+    private SpriteRenderer sr;
+    private Animator animator;
+    private bool overrideSprite = false;
+    private Sprite currentOverrideSprite;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         myRigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+
+    void Awake()
+    {
+        sr = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -62,6 +77,26 @@ public class CharacterScript : MonoBehaviour
         WallJump();
 
         Dash();
+        if (!isGrounded && !isWallSliding)
+        {
+            ShowJumpSprite();
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (isWallSliding)
+        {
+            if (transform.localScale.x > 0)
+                ShowWallHoldSpriteRight();
+            else
+                ShowWallHoldSpriteLeft();
+        }
+        // LateUpdate überschreibt den Animator
+        if (overrideSprite)
+        {
+            sr.sprite = currentOverrideSprite;
+        }
     }
 
     private void Movement()
@@ -163,6 +198,7 @@ public class CharacterScript : MonoBehaviour
                 isGrounded = true;
                 isWallSliding = false;
                 jumpsLeft = 1;
+                ResumeAnimation();
                 return;
             }
         }
@@ -225,5 +261,28 @@ public class CharacterScript : MonoBehaviour
             myRigidBody.linearVelocityX = dashBoost * lastDirection;
             dashTimer = 0;
         }
+    }
+
+    public void ShowJumpSprite()
+    {
+        overrideSprite = true;
+        currentOverrideSprite = jumpSprite;
+    }
+
+    public void ShowWallHoldSpriteLeft()
+    {
+        overrideSprite = true;
+        currentOverrideSprite = wallclingLeftSprite;
+    }
+    public void ShowWallHoldSpriteRight()
+    {
+        overrideSprite = true;
+        currentOverrideSprite = wallclingRightSprite;
+    }
+
+    public void ResumeAnimation()
+    {
+        overrideSprite = false;
+        // Animator übernimmt automatisch wieder
     }
 }
